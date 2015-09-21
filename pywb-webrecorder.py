@@ -7,6 +7,7 @@ import time
 import atexit
 import itertools
 import signal
+import shutil
 
 from pywb.warc import cdxindexer
 from argparse import ArgumentParser
@@ -99,14 +100,14 @@ class CDXUpdater(object):
             if name.endswith('.warc.gz'):
                 src = os.path.join(self.record_dir, name)
                 dest = os.path.join(self.done_dir, name)
-                os.rename(src, dest)
+                shutil.move(src, dest)
                 any_done = True
 
             elif name.endswith('.warc.gz.open'):
                 # only one warc can be 'open', move any others to done
                 if curr_open_warc:
                     name_noopen = os.path.splitext(name)[0]
-                    os.rename(curr_open_warc,
+                    shutil.move(curr_open_warc,
                               os.path.join(self.done_dir, name_noopen))
 
                 curr_open_warc = os.path.join(self.record_dir, name)
@@ -195,7 +196,7 @@ class CDXUpdater(object):
             os.remove(temp_cdx)
             return False
         else:
-            os.rename(temp_cdx, output_cdx)
+            shutil.move(temp_cdx, output_cdx)
             return True
 
 
